@@ -1,0 +1,45 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<!-- Title / end card, recorded like a page (1280x720). window.mount({title, subtitle, url, cta, icon, brand}) -->
+<style>
+@font-face{font-family:InterDV;src:url(../assets/fonts/Inter-Medium.ttf);font-weight:500}
+@font-face{font-family:InterDV;src:url(../assets/fonts/Inter-SemiBold.ttf);font-weight:600}
+@font-face{font-family:InterDV;src:url(../assets/fonts/Inter-Bold.ttf);font-weight:700}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1280px;height:720px;overflow:hidden;font-family:InterDV,system-ui,sans-serif;-webkit-font-smoothing:antialiased;color:#0f172a}
+#bg{position:absolute;inset:0;background:
+  radial-gradient(760px 520px at 12% 0%,var(--b20) 0%,transparent 70%),
+  radial-gradient(700px 520px at 100% 100%,var(--b14) 0%,transparent 70%),
+  linear-gradient(160deg,#ffffff,#f6f7fb)}
+#c{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 120px;gap:22px}
+.icon{width:104px;height:104px;border-radius:26px;box-shadow:0 18px 40px rgba(15,23,42,.18),0 0 0 1px rgba(15,23,42,.06);object-fit:cover;background:#fff}
+.mono{width:104px;height:104px;border-radius:26px;display:grid;place-items:center;color:#fff;font-weight:700;font-size:52px;background:var(--b)}
+h1{font-size:72px;line-height:1.04;font-weight:700;letter-spacing:-.035em}
+p{font-size:28px;line-height:1.35;font-weight:500;color:#475569;max-width:900px;letter-spacing:-.01em}
+.url{margin-top:8px;font-size:22px;font-weight:600;color:var(--bd);background:var(--b10);padding:10px 20px;border-radius:999px}
+.cta{font-size:22px;font-weight:600;color:#fff;background:var(--b);padding:12px 26px;border-radius:999px;box-shadow:0 10px 26px var(--b30)}
+.in{opacity:0;transform:translateY(18px);animation:in .7s cubic-bezier(.2,.7,.2,1) forwards}
+@keyframes in{to{opacity:1;transform:none}}
+</style></head>
+<body><div id="bg"></div><div id="c"></div>
+<script>
+const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+function hex2rgb(h) { h = h.replace('#', ''); if (h.length === 3) h = [...h].map((c) => c + c).join(''); const n = parseInt(h, 16); return [n >> 16 & 255, n >> 8 & 255, n & 255]; }
+window.mount = (d) => {
+  const [r, g, b] = hex2rgb(d.brand || '#4f46e5');
+  const dark = [r, g, b].map((v) => Math.round(v * 0.62));
+  const st = document.documentElement.style;
+  st.setProperty('--b', `rgb(${r},${g},${b})`); st.setProperty('--bd', `rgb(${dark})`);
+  for (const a of [10, 14, 20, 30]) st.setProperty('--b' + a, `rgba(${r},${g},${b},${a / 100})`);
+  let i = 0; const dl = () => `style="animation-delay:${(0.08 + 0.14 * i++).toFixed(2)}s"`;
+  let h = '';
+  if (d.icon !== false) h += d.icon ? `<img class="icon in" ${dl()} src="${esc(d.icon)}" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'mono in',textContent:${JSON.stringify((d.title || '?')[0])}}))">`
+                                    : `<div class="mono in" ${dl()}>${esc((d.title || '?')[0])}</div>`;
+  h += `<h1 class="in" ${dl()}>${esc(d.title)}</h1>`;
+  if (d.subtitle) h += `<p class="in" ${dl()}>${esc(d.subtitle)}</p>`;
+  if (d.cta) h += `<div class="cta in" ${dl()}>${esc(d.cta)}</div>`;
+  if (d.url) h += `<div class="url in" ${dl()}>${esc(d.url)}</div>`;
+  document.getElementById('c').innerHTML = h;
+  return document.fonts.ready.then(() => true);
+};
+</script></body></html>

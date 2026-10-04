@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# demo-video entry point: dv explore <url> | dv try <scenes.json> | dv build <scenes.json> [--draft] | dv check <mp4>
+set -euo pipefail
+SKILL="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+for t in node npm ffmpeg ffprobe uv; do
+  command -v "$t" >/dev/null || { echo "ERROR: '$t' is not installed. See $SKILL/README.md (Requirements)." >&2; exit 3; }
+done
+if [ ! -d "$SKILL/node_modules/playwright" ] && [ ! -d "$SKILL/node_modules/playwright-core" ]; then
+  echo "first run: installing the Playwright Node package ..." >&2
+  (cd "$SKILL" && npm install --no-audit --no-fund --silent)
+fi
+EXTRA=()
+for a in "$@"; do [ "$a" = "--stt" ] && EXTRA=(--extra stt); done
+exec uv run --quiet --project "$SKILL" ${EXTRA[@]+"${EXTRA[@]}"} python "$SKILL/scripts/build.py" "$@"

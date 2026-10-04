@@ -1,0 +1,153 @@
+{
+  "url": "https://demo.playwright.dev/todomvc/",
+  "brand": "#b83f45",
+  "hide": [
+    "div:has(> a[href=\"https://todomvc.com/\"])"
+  ],
+  "camera": {
+    "click_zoom": 1.3,
+    "type_zoom": 1.4,
+    "max_zoom": 1.6
+  },
+  "scenes": [
+    {
+      "id": "hook",
+      "voice": "A to-do list that stays out of your way. Type a task, press Enter, and it's on the list.",
+      "min": 5.5,
+      "actions": [
+        {
+          "goto": "/todomvc/"
+        },
+        {
+          "wait_for": ".new-todo"
+        },
+        {
+          "pause": 0.8
+        },
+        {
+          "type": "Buy groceries",
+          "into": ".new-todo",
+          "cps": 14
+        },
+        {
+          "press": "Enter"
+        },
+        {
+          "wait_for": {
+            "css": ".todo-list li",
+            "has_text": "Buy groceries"
+          }
+        }
+      ]
+    },
+    {
+      "id": "add",
+      "voice": "Add a few more. Each one lands instantly, with a live count of what's left.",
+      "actions": [
+        {
+          "type": "Call the dentist",
+          "into": ".new-todo",
+          "enter": true
+        },
+        {
+          "type": "Plan the weekend trip",
+          "into": ".new-todo",
+          "enter": true
+        },
+        {
+          "focus": ".todo-count",
+          "zoom": 1.5,
+          "for": 1.4
+        }
+      ],
+      "min": 6.0
+    },
+    {
+      "id": "complete",
+      "voice": "Done with something? Tick the circle, and it's crossed off.",
+      "actions": [
+        {
+          "click": {
+            "css": ".todo-list li",
+            "has_text": "Buy groceries"
+          },
+          "dx": 0.04,
+          "at": "Tick"
+        },
+        {
+          "pause": 0.5
+        },
+        {
+          "click": {
+            "css": ".todo-list li",
+            "has_text": "Call the dentist"
+          },
+          "dx": 0.04
+        },
+        {
+          "pause": 0.4
+        }
+      ]
+    },
+    {
+      "id": "filter",
+      "voice": "Use the filters to see only what's still active, or only what you've finished.",
+      "actions": [
+        {
+          "click": {
+            "role": "link",
+            "name": "Active"
+          },
+          "at": "active"
+        },
+        {
+          "pause": 0.6
+        },
+        {
+          "click": {
+            "role": "link",
+            "name": "Completed"
+          },
+          "at": "finished"
+        },
+        {
+          "pause": 0.5
+        }
+      ],
+      "min": 6.4
+    },
+    {
+      "id": "clear",
+      "voice": "Then clear completed sweeps the finished tasks away in one click.",
+      "actions": [
+        {
+          "click": {
+            "role": "link",
+            "name": "All"
+          }
+        },
+        {
+          "click": {
+            "role": "button",
+            "name": "Clear completed"
+          },
+          "at": "sweeps"
+        },
+        {
+          "pause": 0.8
+        }
+      ]
+    },
+    {
+      "id": "end",
+      "voice": "TodoMVC. Simple, fast, and focused on what's left to do.",
+      "card": {
+        "title": "TodoMVC",
+        "subtitle": "Simple, fast, and focused on what's left to do.",
+        "url": "demo.playwright.dev/todomvc",
+        "icon": false
+      }
+    }
+  ],
+  "css": "body{zoom:1.35}"
+}
